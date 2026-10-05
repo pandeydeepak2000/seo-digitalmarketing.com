@@ -1,0 +1,74 @@
+# ==========================================================================
+# TopBlogTech Enterprise Security Hardening
+# ==========================================================================
+
+# 1. Disable Directory Browsing
+Options -Indexes
+
+# 2. Block access to wp-config.php and database/system backup files
+<FilesMatch "^(wp-config\.php|\.htaccess|\.user\.ini|php\.ini|.*\.sql|.*\.log|readme\.html|license\.txt)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 3. Block XML-RPC (Prevents 95% of Brute-Force & DDoS Attacks)
+<Files "xmlrpc.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# 4. HTTP Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# 5. Block SQL Injection and Malicious URL Queries
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{QUERY_STRING} (eval\(|base64_decode|concat\(|<script|GLOBALS|\[0-9a-fA-F]{32}) [NC,OR]
+    RewriteCond %{QUERY_STRING} (boot\.ini|etc/passwd|win\.ini) [NC,OR]
+    RewriteCond %{QUERY_STRING} (benchmark\(|schema\(|information_schema) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# 6. Gzip Compression for Fast Loading
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# 7. Leverage Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress

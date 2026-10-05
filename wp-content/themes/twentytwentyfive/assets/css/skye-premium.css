@@ -1,0 +1,420 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap');
+
+:root {
+    --skye-cyan: #06b6d4;
+    --skye-blue: #2563eb;
+    --skye-navy: #0f172a;
+    --skye-grad: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+    --skye-card-bg: #ffffff;
+    --skye-border: #e2e8f0;
+    --skye-text-dark: #0f172a;
+    --skye-text-muted: #64748b;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    background-color: #f8fafc;
+    color: var(--skye-text-dark);
+}
+
+.skye-cyan-text {
+    background: var(--skye-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Header */
+.skye-header {
+    background: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.2);
+}
+.skye-header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.skye-brand .skye-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+}
+.skye-logo-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+.skye-brand-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #ffffff;
+    display: block;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+.skye-brand-sub {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--skye-cyan);
+    display: block;
+}
+.skye-nav-list {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.skye-nav-item {
+    text-decoration: none;
+    color: #cbd5e1;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+.skye-nav-item:hover, .skye-nav-item.active {
+    color: var(--skye-cyan);
+    background: rgba(6, 182, 212, 0.1);
+}
+.skye-btn-cta {
+    background: var(--skye-grad);
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 4px 14px rgba(6, 182, 212, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.skye-btn-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.55);
+}
+.skye-mobile-toggle {
+    display: none;
+}
+
+/* Hero Section */
+.skye-hero-section {
+    position: relative;
+    padding: 4.5rem 1.5rem 3.5rem;
+    background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 100%);
+    border-bottom: 1px solid #334155;
+    text-align: center;
+    overflow: hidden;
+    color: #ffffff;
+}
+.skye-hero-content {
+    max-width: 920px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+.skye-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--skye-cyan);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 1.1rem;
+    border-radius: 9999px;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(6, 182, 212, 0.4);
+}
+.skye-hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2.1rem, 4.5vw, 3.4rem);
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.1rem;
+}
+.skye-hero-subtitle {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    line-height: 1.65;
+    max-width: 780px;
+    margin: 0 auto 1.8rem;
+}
+.skye-hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+}
+.skye-pill {
+    background: #1e293b;
+    color: #38bdf8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid #334155;
+}
+.skye-pill:hover {
+    background: var(--skye-grad);
+    color: #ffffff;
+    border-color: transparent;
+    transform: translateY(-1px);
+}
+.skye-section-header {
+    max-width: 1200px;
+    margin: 3.5rem auto 1.5rem;
+    padding: 0 1.5rem;
+}
+.skye-section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.skye-section-bar {
+    width: 5px;
+    height: 30px;
+    background: var(--skye-grad);
+    border-radius: 4px;
+}
+.skye-section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--skye-text-dark);
+    margin: 0;
+}
+.skye-badge-count {
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    margin-left: auto;
+}
+
+/* Cards */
+.wp-block-post-template {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)) !important;
+    gap: 2rem !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 1rem 1.5rem 4rem !important;
+}
+.wp-block-post {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+.wp-block-post:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 12px 30px -4px rgba(6, 182, 212, 0.15) !important;
+    border-color: #bae6fd !important;
+}
+.wp-block-post-featured-image {
+    margin: 0 !important;
+}
+.wp-block-post-featured-image img {
+    width: 100% !important;
+    height: 220px !important;
+    object-fit: cover !important;
+    transition: transform 0.3s ease !important;
+}
+.wp-block-post:hover .wp-block-post-featured-image img {
+    transform: scale(1.03) !important;
+}
+.wp-block-post .wp-block-group {
+    padding: 1.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+.wp-block-post-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 1.35rem !important;
+    font-weight: 800 !important;
+    line-height: 1.35 !important;
+    margin: 0.5rem 0 0.85rem !important;
+}
+.wp-block-post-title a {
+    color: var(--skye-text-dark) !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+.wp-block-post-title a:hover {
+    color: var(--skye-blue) !important;
+}
+.wp-block-post-excerpt {
+    color: var(--skye-text-muted) !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.25rem !important;
+}
+
+/* Footer */
+.skye-footer {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 4rem 1.5rem 2rem;
+    margin-top: 4rem;
+    border-top: 3px solid var(--skye-cyan);
+}
+.skye-footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.skye-footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+    gap: 2.5rem;
+    margin-bottom: 3.5rem;
+}
+.skye-footer-desc {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin: 1rem 0 1.25rem;
+    color: #94a3b8;
+}
+.skye-trust-metrics {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.skye-metric-item strong {
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--skye-cyan);
+}
+.skye-metric-item span {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.skye-footer-heading {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+}
+.skye-footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.skye-footer-links li {
+    margin-bottom: 0.65rem;
+}
+.skye-footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+.skye-footer-links a:hover {
+    color: var(--skye-cyan);
+}
+.skye-newsletter-desc {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    color: #94a3b8;
+}
+.skye-newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.skye-newsletter-input {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+}
+.skye-newsletter-input:focus {
+    border-color: var(--skye-cyan);
+}
+.skye-newsletter-btn {
+    background: var(--skye-grad);
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.skye-newsletter-btn:hover {
+    opacity: 0.92;
+}
+.skye-ssl-badge {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.6rem;
+}
+.skye-footer-bottom {
+    border-top: 1px solid #1e293b;
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.skye-trust-tags {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+@media (max-width: 992px) {
+    .skye-footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media (max-width: 768px) {
+    .skye-nav {
+        display: none;
+    }
+    .skye-footer-grid {
+        grid-template-columns: 1fr;
+    }
+    .wp-block-post-template {
+        grid-template-columns: 1fr !important;
+    }
+}
