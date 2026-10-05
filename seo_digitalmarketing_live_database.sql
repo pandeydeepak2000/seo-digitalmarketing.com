@@ -36,7 +36,6 @@ INSERT INTO `sdm_options` (`option_name`, `option_value`, `autoload`) VALUES
 ('comment_previously_approved', '1', 'yes'),
 ('comment_max_links', '2', 'yes'),
 ('moderation_keys', '', 'no'),
-('comment_previously_approved', '1', 'yes'),
 ('posts_per_page', '9', 'yes'),
 ('posts_per_rss', '10', 'yes'),
 ('rss_use_excerpt', '0', 'yes'),
@@ -49,7 +48,6 @@ INSERT INTO `sdm_options` (`option_name`, `option_value`, `autoload`) VALUES
 ('default_ping_status', 'open', 'yes'),
 ('default_pingback_flag', '1', 'yes'),
 ('default_post_format', '0', 'yes'),
-('posts_per_page', '9', 'yes'),
 ('date_format', 'F j, Y', 'yes'),
 ('time_format', 'g:i a', 'yes'),
 ('links_updated_date_format', 'F j, Y g:i a', 'yes'),
@@ -59,7 +57,8 @@ INSERT INTO `sdm_options` (`option_name`, `option_value`, `autoload`) VALUES
 ('stylesheet', 'twentytwentyfive', 'yes'),
 ('current_theme', 'Twenty Twenty-Five', 'yes'),
 ('permalink_structure', '/%postname%/', 'yes'),
-('fresh_site', '0', 'yes');
+('fresh_site', '0', 'yes')
+ON DUPLICATE KEY UPDATE `option_value` = VALUES(`option_value`);
 
 -- ----------------------------
 -- Table structure for sdm_users
@@ -596,3 +595,68 @@ INSERT INTO `sdm_term_relationships` (`object_id`, `term_taxonomy_id`) VALUES
 (10, 4); -- Post 4 -> Topical Authority
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+-- ----------------------------
+-- Table structure for sdm_comments
+-- ----------------------------
+DROP TABLE IF EXISTS `sdm_comments`;
+CREATE TABLE `sdm_comments` (
+  `comment_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `comment_post_ID` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `comment_author` tinytext NOT NULL,
+  `comment_author_email` varchar(100) NOT NULL DEFAULT '',
+  `comment_author_url` varchar(200) NOT NULL DEFAULT '',
+  `comment_author_IP` varchar(100) NOT NULL DEFAULT '',
+  `comment_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `comment_date_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `comment_content` text NOT NULL,
+  `comment_karma` int(11) NOT NULL DEFAULT 0,
+  `comment_approved` varchar(20) NOT NULL DEFAULT '1',
+  `comment_agent` varchar(255) NOT NULL DEFAULT '',
+  `comment_type` varchar(20) NOT NULL DEFAULT 'comment',
+  `comment_parent` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `user_id` bigint(20) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`comment_ID`),
+  KEY `comment_post_ID` (`comment_post_ID`),
+  KEY `comment_approved_date_gmt` (`comment_approved`,`comment_date_gmt`),
+  KEY `comment_date_gmt` (`comment_date_gmt`),
+  KEY `comment_parent` (`comment_parent`),
+  KEY `comment_author_email` (`comment_author_email`(10))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- ----------------------------
+-- Table structure for sdm_commentmeta
+-- ----------------------------
+DROP TABLE IF EXISTS `sdm_commentmeta`;
+CREATE TABLE `sdm_commentmeta` (
+  `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `comment_id` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `meta_key` varchar(255) DEFAULT NULL,
+  `meta_value` longtext DEFAULT NULL,
+  PRIMARY KEY (`meta_id`),
+  KEY `comment_id` (`comment_id`),
+  KEY `meta_key` (`meta_key`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- ----------------------------
+-- Table structure for sdm_links
+-- ----------------------------
+DROP TABLE IF EXISTS `sdm_links`;
+CREATE TABLE `sdm_links` (
+  `link_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `link_url` varchar(255) NOT NULL DEFAULT '',
+  `link_name` varchar(255) NOT NULL DEFAULT '',
+  `link_image` varchar(255) NOT NULL DEFAULT '',
+  `link_target` varchar(25) NOT NULL DEFAULT '',
+  `link_description` varchar(255) NOT NULL DEFAULT '',
+  `link_visible` varchar(20) NOT NULL DEFAULT 'Y',
+  `link_owner` bigint(20) unsigned NOT NULL DEFAULT 1,
+  `link_rating` int(11) NOT NULL DEFAULT 0,
+  `link_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `link_rel` varchar(255) NOT NULL DEFAULT '',
+  `link_notes` mediumtext NOT NULL,
+  `link_rss` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`link_id`),
+  KEY `link_visible` (`link_visible`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
