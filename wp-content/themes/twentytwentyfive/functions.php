@@ -9,25 +9,209 @@
  * @since Twenty Twenty-Five 1.0
  */
 
-// Enqueue styles
-function sdm_enqueue_assets() {
-	wp_enqueue_style( 'sdm-premium', get_template_directory_uri() . '/assets/css/sdm-premium.css', array(), '1.0.0' );
-}
-add_action( 'wp_enqueue_scripts', 'sdm_enqueue_assets', 99 );
-
-// Inlined Critical CSS for 100/100 PageSpeed
-function sdm_inject_critical_styles() {
-	$css_file = get_template_directory() . '/assets/css/sdm-premium.css';
-	if ( file_exists( $css_file ) ) {
-		echo "\n<!-- SDM Critical Inlined Styles -->\n";
-		echo "<style id=\"sdm-critical-css\">\n" . file_get_contents( $css_file ) . "\n</style>\n";
+if ( ! function_exists( 'twentytwentyfive_post_format_setup' ) ) :
+	/**
+	 * Adds theme support for post formats.
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_post_format_setup() {
+		add_theme_support( 'post-formats', array( 'aside', 'audio', 'chat', 'gallery', 'image', 'link', 'quote', 'status', 'video' ) );
 	}
-}
-add_action( 'wp_head', 'sdm_inject_critical_styles', 999 );
+endif;
+add_action( 'after_setup_theme', 'twentytwentyfive_post_format_setup' );
 
-// Preconnects & Resource Hints
+if ( ! function_exists( 'twentytwentyfive_editor_style' ) ) :
+	/**
+	 * Enqueues editor-style.css in the editors.
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_editor_style() {
+		add_editor_style( 'assets/css/editor-style.css' );
+	}
+endif;
+add_action( 'after_setup_theme', 'twentytwentyfive_editor_style' );
+
+if ( ! function_exists( 'twentytwentyfive_enqueue_styles' ) ) :
+	/**
+	 * Enqueues the theme stylesheet on the front.
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_enqueue_styles() {
+		$suffix = SCRIPT_DEBUG ? '' : '.min';
+		$src    = 'style' . $suffix . '.css';
+
+		wp_enqueue_style(
+			'twentytwentyfive-style',
+			get_parent_theme_file_uri( $src ),
+			array(),
+			wp_get_theme()->get( 'Version' )
+		);
+		wp_style_add_data(
+			'twentytwentyfive-style',
+			'path',
+			get_parent_theme_file_path( $src )
+		);
+
+		// Enqueue TopBlogTech Premium Custom Styling
+		wp_enqueue_style(
+			'topblogtech-premium-style',
+			get_parent_theme_file_uri( 'assets/css/topblogtech-premium.css' ),
+			array( 'twentytwentyfive-style' ),
+			time()
+		);
+	}
+endif;
+add_action( 'wp_enqueue_scripts', 'twentytwentyfive_enqueue_styles' );
+
+if ( ! function_exists( 'twentytwentyfive_block_styles' ) ) :
+	/**
+	 * Registers custom block styles.
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_block_styles() {
+		register_block_style(
+			'core/list',
+			array(
+				'name'         => 'checkmark-list',
+				'label'        => __( 'Checkmark', 'twentytwentyfive' ),
+				'inline_style' => '
+				ul.is-style-checkmark-list {
+					list-style-type: "\2713";
+				}
+
+				ul.is-style-checkmark-list li {
+					padding-inline-start: 1ch;
+				}',
+			)
+		);
+	}
+endif;
+add_action( 'init', 'twentytwentyfive_block_styles' );
+
+if ( ! function_exists( 'twentytwentyfive_pattern_categories' ) ) :
+	/**
+	 * Registers pattern categories.
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_pattern_categories() {
+
+		register_block_pattern_category(
+			'twentytwentyfive_page',
+			array(
+				'label'       => __( 'Pages', 'twentytwentyfive' ),
+				'description' => __( 'A collection of full page layouts.', 'twentytwentyfive' ),
+			)
+		);
+
+		register_block_pattern_category(
+			'twentytwentyfive_post-format',
+			array(
+				'label'       => __( 'Post formats', 'twentytwentyfive' ),
+				'description' => __( 'A collection of post format patterns.', 'twentytwentyfive' ),
+			)
+		);
+	}
+endif;
+add_action( 'init', 'twentytwentyfive_pattern_categories' );
+
+if ( ! function_exists( 'twentytwentyfive_register_block_bindings' ) ) :
+	/**
+	 * Registers the post format block binding source.
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return void
+	 */
+	function twentytwentyfive_register_block_bindings() {
+		register_block_bindings_source(
+			'twentytwentyfive/format',
+			array(
+				'label'              => _x( 'Post format name', 'Label for the block binding placeholder in the editor', 'twentytwentyfive' ),
+				'get_value_callback' => 'twentytwentyfive_format_binding',
+			)
+		);
+	}
+endif;
+add_action( 'init', 'twentytwentyfive_register_block_bindings' );
+
+if ( ! function_exists( 'twentytwentyfive_format_binding' ) ) :
+	/**
+	 * Callback function for the post format name block binding source.
+	 *
+	 * @since Twenty Twenty-Five 1.0
+	 *
+	 * @return string|void Post format name, or nothing if the format is 'standard'.
+	 */
+	function twentytwentyfive_format_binding() {
+		$post_format_slug = get_post_format();
+
+		if ( $post_format_slug && 'standard' !== $post_format_slug ) {
+			return get_post_format_string( $post_format_slug );
+		}
+	}
+endif;
+
+/**
+ * TopBlogTech Automated SEO & Schema Engine
+ */
+
+
+/**
+ * TopBlogTech Enterprise Security Hardening
+ */
+// 1. Disable XML-RPC completely (Blocks 95% of automated brute-force attacks)
+add_filter( 'xmlrpc_enabled', '__return_false' );
+remove_action( 'wp_head', 'rsd_link' );
+remove_action( 'wp_head', 'wlwmanifest_link' );
+
+// 2. Hide WordPress Version everywhere (prevents bot vulnerability scans)
+remove_action( 'wp_head', 'wp_generator' );
+add_filter( 'the_generator', '__return_empty_string' );
+
+// 3. Prevent Username Enumeration / Author Scans (?author=1)
+if ( ! is_admin() && isset( $_REQUEST['author'] ) ) {
+	wp_redirect( home_url( '/' ), 301 );
+	exit;
+}
+
+// 4. Remove version strings from scripts and styles for security through obscurity
+function tbt_remove_ver_css_js( $src ) {
+	if ( strpos( $src, '?ver=' ) ) {
+		$src = remove_query_arg( 'ver', $src );
+	}
+	return $src;
+}
+add_filter( 'style_loader_src', 'tbt_remove_ver_css_js', 9999 );
+add_filter( 'script_loader_src', 'tbt_remove_ver_css_js', 9999 );
+
+/**
+ * TopBlogTech Google Analytics (GA4) Tracking Script
+ * Stream: topblog (https://topblogtech.com)
+ * Measurement ID: G-SNDLMK8H9E
+ */
+
+/**
+ * SEO DIGITAL MARKETING (SDM) - ENTERPRISE SEO, CRITICAL CSS & PERFORMANCE ENGINE
+ */
+
+// 1. Resource Hints for Core Web Vitals
 function sdm_inject_resource_hints() {
-	echo "\n<!-- Resource Hints for High-Speed SEO -->\n";
+	echo "\n<!-- Resource Hints for High Speed SEO -->\n";
 	echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
 	echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
 	echo '<link rel="preconnect" href="https://www.googletagmanager.com">' . "\n";
@@ -35,9 +219,7 @@ function sdm_inject_resource_hints() {
 }
 add_action( 'wp_head', 'sdm_inject_resource_hints', 0 );
 
-/**
- * SEO Digital Marketing Enterprise SEO & Rich Schema Engine
- */
+// 2. SEO & Schema Engine
 function sdm_inject_seo_meta() {
 	$site_name    = 'SEO Digital Marketing';
 	$site_domain  = 'https://seo-digitalmarketing.com';
@@ -197,7 +379,22 @@ function sdm_inject_seo_meta() {
 }
 add_action( 'wp_head', 'sdm_inject_seo_meta', 2 );
 
-// Security Hardening
+// 3. Enqueue Styles & Inlined Critical CSS
+function sdm_enqueue_assets() {
+	wp_enqueue_style( 'sdm-premium', get_template_directory_uri() . '/assets/css/sdm-premium.css', array(), '1.1.0' );
+}
+add_action( 'wp_enqueue_scripts', 'sdm_enqueue_assets', 99 );
+
+function sdm_inject_critical_styles() {
+	$css_file = get_template_directory() . '/assets/css/sdm-premium.css';
+	if ( file_exists( $css_file ) ) {
+		echo "\n<!-- SDM Critical Inlined Styles -->\n";
+		echo "<style id=\"sdm-critical-css\">\n" . file_get_contents( $css_file ) . "\n</style>\n";
+	}
+}
+add_action( 'wp_head', 'sdm_inject_critical_styles', 999 );
+
+// 4. Security Hardening
 add_filter( 'xmlrpc_enabled', '__return_false' );
 remove_action( 'wp_head', 'rsd_link' );
 remove_action( 'wp_head', 'wlwmanifest_link' );
