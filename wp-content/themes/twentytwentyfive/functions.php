@@ -200,10 +200,23 @@ add_filter( 'style_loader_src', 'tbt_remove_ver_css_js', 9999 );
 add_filter( 'script_loader_src', 'tbt_remove_ver_css_js', 9999 );
 
 /**
- * TopBlogTech Google Analytics (GA4) Tracking Script
- * Stream: topblog (https://topblogtech.com)
- * Measurement ID: G-SNDLMK8H9E
+ * SEO Digital Marketing Google Analytics (GA4) Tracking Script
+ * Measurement ID: G-KR15LDWH9J
  */
+function sdm_google_analytics_tracking() {
+	?>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KR15LDWH9J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KR15LDWH9J');
+</script>
+	<?php
+}
+add_action( 'wp_head', 'sdm_google_analytics_tracking', 1 );
 
 /**
  * SEO DIGITAL MARKETING (SDM) - ENTERPRISE SEO, CRITICAL CSS & PERFORMANCE ENGINE
